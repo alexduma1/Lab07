@@ -10,4 +10,20 @@ class BibliotecaDAO:
     def __init__(self):
         pass
 
-    # TODO
+    def get_biblioteche(self):
+        cnx = DBConnect.get_connection()
+        if cnx is None:
+            return None
+        try:
+            cursor = cnx.cursor(dictionary=True)
+            cursor.execute("SELECT id, nome, indirizzo FROM biblioteca ORDER BY nome")
+            biblioteche = []
+            for riga in cursor:
+                biblioteche.append(Biblioteca(riga["id"], riga["nome"], riga["indirizzo"]))
+            cursor.close()
+            return biblioteche
+        except Exception as err:
+            print(err)
+            return None
+        finally:
+            cnx.close()
